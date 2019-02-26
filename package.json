@@ -1,0 +1,45 @@
+{
+  "name": "dev-pack",
+  "version": "0.0.0",
+  "description": "dev-pack is a super-fast local development module bundler, server with hot module replacement",
+  "main": "src/cli.js",
+  "files": [
+    "/src"
+  ],
+  "keywords": [
+    "dev-pack",
+    "devlopment",
+    "module",
+    "bundler",
+    "hmr"
+  ],
+  "author": "Víctor García",
+  "license": "MIT",
+  "bin": {
+    "dev-pack": "src/cli.js"
+  },
+  "dependencies": {
+    "@babel/parser": "7.3.4",
+    "@babel/traverse": "7.3.4",
+    "@types/node": "11.9.5",
+    "chokidar": "2.1.2",
+    "dotenv": "6.2.0",
+    "eslint": "5.14.1",
+    "eslint-config-prettier": "4.0.0",
+    "eslint-plugin-node": "8.0.1",
+    "eslint-plugin-prettier": "3.0.1",
+    "http-proxy": "1.17.0",
+    "husky": "1.3.1",
+    "lint-staged": "8.1.4",
+    "memory-fs": "0.4.1",
+    "mime": "2.4.0",
+    "prettier": "1.16.4",
+    "query-string": "6.2.0",
+    "resolve": "1.10.0",
+    "sade": "1.4.2",
+    "source-list-map": "2.0.1",
+    "source-map-url": "0.4.0",
+    "sucrase": "3.9.5",
+    "ws": "6.1.4"
+  }
+}
