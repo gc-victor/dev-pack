@@ -6,6 +6,10 @@
   "files": [
     "/src"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gc-victor/dev-pack"
+  },
   "keywords": [
     "dev-pack",
     "devlopment",
