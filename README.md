@@ -6,17 +6,19 @@ Super-fast local development module bundler, server with hot module replacement.
 
 ## Install
 
-`npm install --save-dev dev-pack`
+Isn't needed to be installed. Please, read below the "How to use" section.
 
-`yarn add --dev dev-pack`
+`npm install --save-dev @dev-pack/dev-pack`
+
+`yarn add --dev @dev-pack/dev-pack`
 
 ## How to use
 
-You have to run the command `dev-pack start`, and use the options that you need, to have a really fast dev server with hmr running.
+You have to run the command `npx @dev-pack/dev-pack start`, and use the options that you need, to have a really fast dev server with hmr running.
 
 Optionally you can use a config file, by default called **.devpackrc.json**.
 
-dev-pack will look in the load at the input folder for a index.html, a styles.css (not-required), and index.js.
+dev-pack will look in the load at the input folder for a index.html, a styles.css (not-required), and index.js/ts/tsx.
 
 When watch is set to true, it's default value, it will listen for changes to styles.css and any *.js file in the input folder.
 
