@@ -13,10 +13,6 @@ help :
 	@echo "  make release-major\trelease a new major version"
 	@echo ""
 
-.PHONY: example
-example :
-	src/cli.js ;\
-
 format :
 	$(BINDIR)/prettier --write "src/**/*.js" ;\
 
