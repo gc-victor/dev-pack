@@ -118,6 +118,10 @@ Specify a proxy.
 
 Default: none
 
+## Run cli example
+
+`node src/cli.js start -i example -j example/index.js`
+
 ## Compatible Versioning
 
 ### Summary
