@@ -19,7 +19,7 @@ function createAsset(absolutePath) {
     const content = fs
         .readFileSync(resolveApp(absolutePath), 'utf-8')
         // TODO: Add in the option to define env variables
-        .replace(/process\.env\.NODE_ENV/g, process.env.NODE_ENV);
+        .replace(/process\.env\.NODE_ENV/g, `'${process.env.NODE_ENV}'`);
     const hasSrcMapUrl = srcURL.existsIn(content);
     const dependencies = [];
 
