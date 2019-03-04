@@ -63,7 +63,10 @@ function run(options) {
     wss.on('connection', function connection(ws) {
         log('WebSocket connection');
         ws.on('error', error => log(error));
+        watch(ws);
+    });
 
+    function watch(ws) {
         chokidar
             .watch([
                 `${input}/**/*.js`,
@@ -72,13 +75,14 @@ function run(options) {
                 `${input}/**/*.css`,
                 `${css}`,
             ])
-            .on('change', pathname => {
-                log('File changed: ' + pathname);
-
-                isJavaScript(pathname) && ws.send(pathname);
-                isCSS(pathname) && RegExp(`${css}`).test(pathname) && ws.send(pathname);
+            .on('change', function(pathname) {
+                if (ws.readyState === 1) {
+                    log('File changed: ' + pathname);
+                    isJavaScript(pathname) && ws.send(pathname);
+                    isCSS(pathname) && RegExp(`${css}`).test(pathname) && ws.send(pathname);
+                }
             });
-    });
+    }
 
     function updateJs(file, req, res) {
         write(createModule(file), 200, file)(req, res);
@@ -101,6 +105,9 @@ function run(options) {
     });
 
     server.listen(serverPort);
+    server.on('request', () => {
+        createBundle(jsPathname);
+    });
     log(`Listening on http://localhost:${serverPort}`);
 }
 
