@@ -22,7 +22,29 @@ dev-pack will look in the load at the input folder for a index.html, a styles.cs
 
 When watch is set to true, it's default value, it will listen for changes to styles.css and any *.js file in the input folder.
 
-### Options
+### Using devpackrc.json
+
+```
+{
+  "externals": ["unfetch"],
+  "globals": {
+    "react": {
+      "cdn": "https://unpkg.com/react@16/umd/react.development.js",
+      "window": "React"
+    },
+    "react-dom":  {
+      "cdn": "https://unpkg.com/react-dom@16/umd/react-dom.development.js",
+      "window": "ReactDOM"
+    }
+  },
+  "html": "public/index.html",
+  "input": "src",
+  "js": "src/index.tsx",
+  "proxy": "http://localhost:8080"
+}
+```
+
+### Using CLI
 
 `-c, --config`
 
