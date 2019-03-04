@@ -80,7 +80,7 @@ Default: src/styles.css
 
 `-g, --globals`
 
-Comma-separate list of "moduleID:Global" pairs.
+Global variables. `'{"moduleID": {"window": "GlobalVariable", "cdn": "https://cdn.com"}}'`
 
 Default: none
 

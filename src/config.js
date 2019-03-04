@@ -34,20 +34,14 @@ function getConfigByKey(key) {
 
 function setConfigVariables(options) {
     const globals =
-        typeof options.globals === 'string'
-            ? options.globals.split(',').reduce((acc, global) => {
-                  const arr = global.split(':');
-                  acc[arr[0]] = arr[1];
-                  return acc;
-              }, {})
-            : options.globals;
+        typeof options.globals === 'string' ? JSON.parse(options.globals) : options.globals;
 
     config[CONFIG_CSS_FILE] = options.css || DEFAULT_CSS_FILE;
     config[CONFIG_EXTERNALS] = Array.isArray(options.externals)
         ? options.externals.join(',')
         : options.externals || '';
     config[CONFIG_FILE] = options.config || DEFAULT_CONFIG_FILE;
-    config[CONFIG_GLOBALS] = globals;
+    config[CONFIG_GLOBALS] = globals || {};
     config[CONFIG_HTML_FILE] = options.html || DEFAULT_HTML_FILE;
     config[CONFIG_INPUT] = options.input || DEFAULT_INPUT;
     config[CONFIG_JS_FILE] = options.js || DEFAULT_JS_FILE;
