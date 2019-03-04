@@ -1,6 +1,6 @@
 {
   "name": "@dev-pack/dev-pack",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "dev-pack is a super-fast local development module bundler, server with hot module replacement",
   "main": "src/cli.js",
   "files": [
