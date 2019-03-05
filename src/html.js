@@ -8,6 +8,7 @@ const {
     CONFIG_HTML_BASENAME,
     CONFIG_INPUT,
     CONFIG_SOCKET_PORT,
+    DEFAULT_CSS_FILE,
 } = require('./constants');
 const { getConfigByKey } = require('./config');
 const hmr = require('./hmr');
@@ -65,9 +66,12 @@ function cdnGlobals() {
 function html(pathname) {
     let content = fs.readFileSync(resolveApp(pathname)).toString();
     const input = getConfigByKey(CONFIG_INPUT);
-    const css = getConfigByKey(CONFIG_CSS_FILE);
+    const configCSSFile = getConfigByKey(CONFIG_CSS_FILE);
+    const cssFile =
+        configCSSFile === DEFAULT_CSS_FILE
+            ? path.join(input, getConfigByKey(CONFIG_CSS_FILE))
+            : configCSSFile;
 
-    const cssFile = path.join(input, css);
     const hasCSSFile = fs.existsSync(cssFile);
     const bundle = 'bundle.js';
     const newContent = transformHtml(content)
@@ -75,7 +79,7 @@ function html(pathname) {
         .replace({
             endOfHead: true,
             elements: [
-                hasCSSFile ? `<link id="dev-pack-css" rel="stylesheet" href="${css}" />` : '',
+                hasCSSFile ? `<link id="dev-pack-css" rel="stylesheet" href="${cssFile}" />` : '',
             ],
             before: true,
         })
@@ -104,6 +108,7 @@ function html(pathname) {
     if (hasCSSFile) {
         const css = fs.readFileSync(resolveApp(cssFile));
 
+        mfs.mkdirpSync(resolveApp(path.dirname(cssFile)));
         mfs.writeFile(resolveApp(cssFile), css, err => {
             if (err) throw err;
         });

@@ -46,9 +46,11 @@ function write(content, code, pathname) {
 }
 
 function fileResponse(pathname) {
-    const absolutePath = /^src|^\/src/.test(pathname)
-        ? resolveApp(pathname.replace(/^\//, ''))
-        : resolveApp(`${getConfigByKey(CONFIG_INPUT)}${pathname}`);
+    const absolutePath =
+        path.dirname(pathname) !== '/'
+            ? resolveApp(pathname.replace(/^\//, ''))
+            : resolveApp(`${getConfigByKey(CONFIG_INPUT)}${pathname}`);
+
     try {
         const content = mfs.readFileSync(absolutePath).toString();
 

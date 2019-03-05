@@ -11,6 +11,7 @@ const { register, server, write } = require('./server');
 const { isCSS, isJavaScript } = require('./utils');
 const {
     DEFAULT_CONFIG_FILE,
+    DEFAULT_CSS_FILE,
     DEFAULT_JS_FILE,
     DEFAULT_HTML_FILE,
     CONFIG_CSS_FILE,
@@ -39,22 +40,26 @@ function run(options) {
     const input = getConfigByKey(CONFIG_INPUT);
     const socketPort = getConfigByKey(CONFIG_SOCKET_PORT);
     const serverPort = getConfigByKey(CONFIG_SERVER_PORT);
-    const css = getConfigByKey(CONFIG_CSS_FILE);
+    const configCSSFile = getConfigByKey(CONFIG_CSS_FILE);
+    const cssFile =
+        configCSSFile === DEFAULT_CSS_FILE
+            ? path.join(input, getConfigByKey(CONFIG_CSS_FILE))
+            : configCSSFile;
     const configHtmlFile = getConfigByKey(CONFIG_HTML_FILE);
-    const htmlPathname =
+    const htmlFile =
         configHtmlFile === DEFAULT_HTML_FILE
             ? path.join(input, getConfigByKey(CONFIG_HTML_FILE))
             : configHtmlFile;
     const configJsFile = getConfigByKey(CONFIG_JS_FILE);
-    const jsPathname =
+    const jsFile =
         configJsFile === DEFAULT_JS_FILE
             ? path.join(input, getConfigByKey(CONFIG_JS_FILE))
             : configJsFile;
 
     mfs.mkdirpSync(resolveApp(input));
 
-    createBundle(jsPathname);
-    html(htmlPathname);
+    createBundle(jsFile);
+    html(htmlFile);
 
     const wss = new WebSocket.Server({ port: socketPort });
 
@@ -71,13 +76,13 @@ function run(options) {
                 `${input}/**/*.ts`,
                 `${input}/**/*.tsx`,
                 `${input}/**/*.css`,
-                `${css}`,
+                `${cssFile}`,
             ])
             .on('change', function(pathname) {
                 if (ws.readyState === 1) {
                     log('File changed: ' + pathname);
                     isJavaScript(pathname) && ws.send(pathname);
-                    isCSS(pathname) && RegExp(`${css}`).test(pathname) && ws.send(pathname);
+                    isCSS(pathname) && RegExp(`${cssFile}`).test(pathname) && ws.send(pathname);
                 }
             });
     }
@@ -104,7 +109,7 @@ function run(options) {
 
     server.listen(serverPort);
     server.on('request', () => {
-        createBundle(jsPathname);
+        createBundle(jsFile);
     });
     log(`Listening on http://localhost:${serverPort}`);
 }
