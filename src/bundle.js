@@ -8,7 +8,7 @@ const { SourceListMap } = require('source-list-map');
 const { transform } = require('sucrase');
 const mfs = require('./memory-fs');
 const prelude = require('./prelude');
-const { resolveApp } = require('./utils');
+const { isCSS, resolveApp } = require('./utils');
 const { getConfigByKey } = require('./config');
 const { CONFIG_EXTERNALS, CONFIG_GLOBALS, CONFIG_INPUT } = require('./constants');
 
@@ -47,7 +47,7 @@ function createAsset(absolutePath) {
                     path.node.type === 'ExportAllDeclaration'
                 ) {
                     const { source } = path.node;
-                    if (source && source.value) {
+                    if (source && source.value && !isCSS(source.value)) {
                         dependencies.push(source.value);
                     }
                 }
@@ -72,6 +72,40 @@ function createAsset(absolutePath) {
         id: relativePath,
         map: compiledCode.map || map,
     };
+}
+
+function createGraph(entry) {
+    let queue;
+
+    const mainAsset = createAsset(entry);
+
+    queue = [mainAsset];
+
+    const regx = RegExp(`${getConfigByKey(CONFIG_EXTERNALS).replace(/,/g, '|')}`);
+
+    for (let asset of queue) {
+        const length = asset.dependencies.length;
+
+        asset.mapping = {};
+
+        for (let i = 0; i < length; i++) {
+            const dependency = asset.dependencies[i];
+            const res = resolve.sync(dependency, {
+                basedir: path.dirname(asset.absolutePath),
+                extensions: ['.js', '.ts', '.tsx'],
+                preserveSymlinks: true,
+            });
+
+            if (!/node_modules/g.test(res) || regx.test(res)) {
+                const child = createAsset(res);
+
+                asset.mapping[dependency] = child.id;
+                queue.push(child);
+            }
+        }
+    }
+
+    return queue;
 }
 
 function createBundle(entry) {
@@ -113,40 +147,6 @@ function createBundle(entry) {
     mfs.writeFileSync(resolveApp(path.join(input, bundleMap)), JSON.stringify(map), err => {
         if (err) throw err;
     });
-}
-
-function createGraph(entry) {
-    let queue;
-
-    const mainAsset = createAsset(entry);
-
-    queue = [mainAsset];
-
-    const regx = RegExp(`${getConfigByKey(CONFIG_EXTERNALS).replace(/,/g, '|')}`);
-
-    for (let asset of queue) {
-        const length = asset.dependencies.length;
-
-        asset.mapping = {};
-
-        for (let i = 0; i < length; i++) {
-            const dependency = asset.dependencies[i];
-            const res = resolve.sync(dependency, {
-                basedir: path.dirname(asset.absolutePath),
-                extensions: ['.js', '.ts', '.tsx'],
-                preserveSymlinks: true,
-            });
-
-            if (!/node_modules/g.test(res) || regx.test(res)) {
-                const child = createAsset(res);
-
-                asset.mapping[dependency] = child.id;
-                queue.push(child);
-            }
-        }
-    }
-
-    return queue;
 }
 
 function createHotModuleUpdate(entry) {

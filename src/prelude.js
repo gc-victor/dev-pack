@@ -12,8 +12,9 @@ module.exports = `(function outer(modules, cache, entry) {
                 function(x) {
                     const id = modules[name][1][x];
                     
+                    if (/css/.test(x.split('.').pop())) return;
                     if (configGlobals && configGlobals[x]) return window[configGlobals[x].window];
-
+                    
                     return newRequire(id || x);
                 },
                 m,

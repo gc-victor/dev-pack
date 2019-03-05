@@ -8,6 +8,7 @@ const { getConfigByKey, setConfigVariables } = require('./config');
 const { html } = require('./html');
 const { createBundle, createModule } = require('./bundle');
 const { register, server, write } = require('./server');
+const { isCSS, isJavaScript } = require('./utils');
 const {
     DEFAULT_CONFIG_FILE,
     DEFAULT_JS_FILE,
@@ -56,9 +57,6 @@ function run(options) {
     html(htmlPathname);
 
     const wss = new WebSocket.Server({ port: socketPort });
-    const getExtension = pathname => pathname.split('.').pop();
-    const isJavaScript = pathname => /js|ts|tsx/.test(getExtension(pathname));
-    const isCSS = pathname => /css/.test(getExtension(pathname));
 
     wss.on('connection', function connection(ws) {
         log('WebSocket connection');

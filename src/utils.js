@@ -17,8 +17,15 @@ function varDump(...args) {
     process.exit(1);
 }
 
+const getExtension = pathname => pathname.split('.').pop();
+const isJavaScript = pathname => /js|ts|tsx/.test(getExtension(pathname));
+const isCSS = pathname => /css/.test(getExtension(pathname));
+
 module.exports = {
     appDirectory,
+    getExtension,
+    isCSS,
+    isJavaScript,
     log,
     resolveApp,
     varDump,
