@@ -1,6 +1,3 @@
-BINDIR=node_modules/.bin
-LINT_STAGED=$(BINDIR)/lint-staged
-ESLINT=$(BINDIR)/eslint
 VERSION=$(shell node -p -e 'require("./package.json").version')
 
 help :
@@ -14,14 +11,14 @@ help :
 	@echo ""
 
 format :
-	$(BINDIR)/prettier --write "src/**/*.js" ;\
+	npx prettier --write "src/**/*.js" ;\
 
 lint :
-	$(ESLINT) --fix || exit $? ; \
+	npx eslint ./src --fix || exit $? ; \
 	echo "✓ Lint passed" ;\
 
 lint-staged:
-	$(LINT_STAGED)
+	npx lint-staged
 
 release :
 	git add -A || exit $? ;\

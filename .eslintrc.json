@@ -9,7 +9,7 @@
         "plugin:prettier/recommended"
     ],
     "parserOptions": {
-        "ecmaVersion": 9
+        "ecmaVersion": 10
     },
     "rules": {
         "indent": [
