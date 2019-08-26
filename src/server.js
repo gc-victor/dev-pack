@@ -5,7 +5,12 @@ const mime = require('mime');
 const httpProxy = require('http-proxy');
 const { log, resolveApp } = require('./utils');
 const mfs = require('./memory-fs');
-const { CONFIG_HTML_BASENAME, CONFIG_INPUT, CONFIG_PROXY } = require('./constants');
+const {
+    CONFIG_HTML_BASENAME,
+    CONFIG_HTML_FILE,
+    CONFIG_INPUT,
+    CONFIG_PROXY,
+} = require('./constants');
 const { getConfigByKey } = require('./config');
 
 let handlers = {};
@@ -50,11 +55,14 @@ function fileResponse(pathname) {
         path.dirname(pathname) !== '/'
             ? resolveApp(pathname.replace(/^\//, ''))
             : resolveApp(`${getConfigByKey(CONFIG_INPUT)}${pathname}`);
+    const htmlFile = !path.extname(pathname)
+        ? resolveApp(`${getConfigByKey(CONFIG_HTML_FILE)}`)
+        : false;
 
     try {
-        const content = mfs.readFileSync(absolutePath).toString();
+        const content = mfs.readFileSync(htmlFile || absolutePath).toString();
 
-        return createHandler(write(content, 200, absolutePath));
+        return createHandler(write(content, 200, htmlFile || absolutePath));
     } catch (e) {
         if (getConfigByKey(CONFIG_PROXY)) {
             return (req, res) => {
