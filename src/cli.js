@@ -7,8 +7,7 @@ const { version } = require('../package');
 
 const prog = sade('dev-pack');
 
-prog
-    .version(version)
+prog.version(version)
     .option('-c, --config', 'Configuration file')
     .option('-i, --input', 'Entry folder')
     .option('-h, --html', 'Entry html file')
@@ -30,8 +29,7 @@ prog
     .option('-p, --port', 'Specify a port')
     .option('-x, --proxy', 'Specify a proxy');
 
-prog
-    .command('start')
+prog.command('start')
     .describe(
         'Super-fast development module bundler, with a dev-server, and hot module replacement.'
     )

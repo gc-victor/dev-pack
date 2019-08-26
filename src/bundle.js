@@ -182,9 +182,7 @@ function createHotModuleUpdate(entry) {
 
     return !hasSrcMapUrl
         ? `${source}\n//# sourceMappingURL=${entryBasename}.map`
-        : `hotUpdate({"${graph[0].id}": [function (require, module, exports) {\n${
-              graph[0].code
-          }\n},{},],\n});`;
+        : `hotUpdate({"${graph[0].id}": [function (require, module, exports) {\n${graph[0].code}\n},{},],\n});`;
 }
 
 function sourceListMapModule(graph, i, modulesIds, sourceListMap) {
