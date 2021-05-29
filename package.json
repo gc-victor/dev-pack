@@ -47,6 +47,6 @@
     "source-list-map": "2.0.1",
     "source-map-url": "0.4.0",
     "sucrase": "3.10.1",
-    "ws": "7.1.2"
+    "ws": "7.4.6"
   }
 }
